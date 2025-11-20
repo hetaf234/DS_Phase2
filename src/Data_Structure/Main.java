@@ -449,7 +449,6 @@ static int nextReviewId=1;
     } // end listCustomerReviews
 
 
-
     static void removeProductById(Scanner sc) {
         System.out.print(" Product ID to remove : ");
         int pid = sc.nextInt();
