@@ -57,6 +57,11 @@ static int nextReviewId=1;
                 System.out.println("16- Update Order Status");
                 System.out.println("17- Search Product by Name");
                 System.out.println("18- Products in a price range");
+                System.out.println("19- List Customer Alphabetically");
+                System.out.println("20- Top 3 Most Reviewed Products ");
+                System.out.println("21- List Customer Who Reviewed Product Sorted By Rating");
+                System.out.println("22- List Customer Who Reviewed Product Sorted By Customer Id");
+                
                 System.out.println("0- Exit");
                 System.out.print(" Enter your choice: ");
 
@@ -78,11 +83,11 @@ static int nextReviewId=1;
                     case 4:
                         addReview(sc); break;
                     case 5:
-                       // Product.printTopNByAverageRating(products , 3); break;
+                       Product.printTopNByAverageRating(products); break;
                     case 6:
                         ordersBetweenDates(sc); break;
                     case 7:
-                      //  commonReviewedProducts(sc); break;
+                       commonReviewedProducts(sc); break;
                     case 8:
                         viewProductDetails(sc); break;
                     case 9:
@@ -105,6 +110,15 @@ static int nextReviewId=1;
                         searchProductByName(sc); break;
                     case 18:
                        printProductsInPriceRange(sc); break;  
+                    case 19: 
+                    	Customer.listCustomerAlphabetically(customers); break;
+                    case 20:
+                    	Product.printTop3MostReviewed(products);break;
+                    case 21: 
+                    	listCustomerWhoReviewedProductByRating(sc); break;
+                    case 22:
+                    	listCustomerWhoReviewedProductByCID(sc); break;
+                    	
                     case 0: 
                         System.out.println("Program ended ");
                         break;
@@ -292,16 +306,16 @@ static int nextReviewId=1;
     
     
     
-  /*  static void commonReviewedProducts(Scanner sc) {
+    static void commonReviewedProducts(Scanner sc) {
         System.out.println(" First customer ID:");
         int c1 = sc.nextInt(); sc.nextLine();
 
         System.out.print(" Second customer ID:");
         int c2 = sc.nextInt(); sc.nextLine();
 
-        Product.printCommonReviewedAbove(products, c1, c2, 4.0);
+        Product.printCommonReviewedAbove(products, c1, c2);
     } // end commonReviewedProducts
-*/
+
     
     
     
@@ -714,6 +728,155 @@ static int nextReviewId=1;
         }//end if
         p.printDetails();
     } //end searchProductByName()
+    public static void listCustomerWhoReviewedProductByRating(Scanner sc) {
+    	System.out.println("Enter product id:");
+    	int id=sc.nextInt();
+    	sc.nextLine();
+    	listCustomerWhoReviewedProductByRating(id,products,customers);
+    }//listCustomerWhoReviewedProductByRating(Scanner sc)
+    
+    public static void listCustomerWhoReviewedProductByCID(Scanner sc) {
+    	System.out.println("Enter product id:");
+    	int id=sc.nextInt();
+    	sc.nextLine();
+    	listCustomerWhoReviewedProductByCID(id,products,customers);
+    }//listCustomerWhoReviewedProductByCID(Scanner sc)
+    
+    public static void listCustomerWhoReviewedProductByCID(int pId, AVLTree<Product> pTree,AVLTree<Customer> cTree ) {
+    	Product p=Product.searchById(pTree, pId);
+    	if(p==null) {
+    		System.out.println("product not found");
+    		return;
+    	}//if
+    	int size =p.getReviewCount();
+    	if(size==0) {
+    		System.out.println("no reviews found ");
+    		return;
+    	}//if 
+    	
+    	Review rArray[]=p.getReviewsArray();
+    	 for (int i = 0 ; i < size-1;i++) {
+   		  for (int j = 0 ; j < size-i-1;j++) {
+   			  if(rArray[j].getCustomerId()>rArray[j+1].getCustomerId()) {
+   				Review temp =rArray[j];
+   				rArray[j]=rArray[j+1];
+   				rArray[j+1]=temp;
+   			  }// if 
+   		  }// inner loop j 
+   	  }// outer loop i 
+    	 
+    	 System.out.println("Customers who reviewd  " +p.getName());
+  	   for(int i =0 ; i <size;i++) {
+  		   int cid=rArray[i].getCustomerId();
+  		   Customer c= Customer.searchById(cTree, cid);
+  		   if(c!=null) {
+
+  		
+  			 System.out.println(c.getName()+" - ID "+ cid);
+  	   }//if
+    	 
+  	   } //for
+    	 
+    	 
+    	 
+    	 
+    	 
+    }//listCustomerWhoReviewedProductByRating
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   public static void listCustomerWhoReviewedProductByRating(int pId, AVLTree<Product> pTree,AVLTree<Customer> cTree ) {
+    	Product p=Product.searchById(pTree, pId);
+    	if(p==null) {
+    		System.out.println("product not found");
+    		return;
+    	}//if
+    	int size =p.getReviewCount();
+    	if(size==0) {
+    		System.out.println("no reviews found ");
+    		return;
+    	}//if 
+    	Review rArray[]=p.getReviewsArray();
+    	 for (int i = 0 ; i < size-1;i++) {
+   		  for (int j = 0 ; j < size-i-1;j++) {
+   			  if(rArray[j].getRating()<rArray[j+1].getRating()) {
+   				Review temp =rArray[j];
+   				rArray[j]=rArray[j+1];
+   				rArray[j+1]=temp;
+   			  }// if 
+   		  }// inner loop j 
+   	  }// outer loop i 
+    	 
+    	 System.out.println("Customers who reviewd  " +p.getName());
+  	   for(int i =0 ; i <size;i++) {
+  		   int cid=rArray[i].getCustomerId();
+  		   Customer c= Customer.searchById(cTree, cid);
+  		   if(c!=null) {
+
+  		
+  			 System.out.println(c.getName()+" - rating "+ rArray[i].getRating());
+  	   }//if
+    	 
+  	   } //for
+    	 
+    	 
+    	 
+    	 
+    	 
+    }//listCustomerWhoReviewedProductByRating
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 } // end Main class

@@ -1,12 +1,13 @@
 package Data_Structure;
 
-
-
 public class AVLTree<T> {
+	
 AVLNode<T> root, current;
+
 public AVLTree() {
 	root=null;
 }
+
 public boolean empty() {
 	return root==null; 
 }
@@ -18,6 +19,17 @@ public boolean full() {
 public T retrieve() {
 	return current.data;
 }
+
+private int getBalance(AVLNode<T> p) {
+	if(p==null) return 0;
+	return height(p.right)-height(p.left);
+}
+
+private int height(AVLNode<T>p) {
+	if(p==null) return -1;
+return 1+Math.max(height(p.left),height(p.right));
+}
+
 
 public boolean findkey(int tkey) {
 	AVLNode<T> p=root , q= root;
@@ -75,32 +87,30 @@ private AVLNode<T> balanceAfterInsert(AVLNode<T> p, int k){
 	
 	if(k<p.key) {
 		p.left=balanceAfterInsert(p.left,k);
-		p.bal--;
 	}//if(k<p.key)
 	
 	else if(k>p.key) {
 		p.right=balanceAfterInsert(p.right,k);
-		p.bal++;
 	}//else if(k>p.key)
 	
 	else {
 		return p;// key exists  
 	}//else
 	
-	
+	p.bal=getBalance(p);
 // unbalance cases 
 	if (p.bal== -2) {// left 
-		if (p.left.bal<=0) 
-			p=rotateRight(p); //	LL
+		if (getBalance(p.left)<=0) 
+			return rotateRight(p); //	LL
 		else 
-			p=rotateLeftRight(p); //	LR
+			return rotateLeftRight(p); //	LR
 	}//if (p.bal==-2)
 	
 	else if (p.bal==2) {// right 
-		if (p.right.bal>=0) 
-			p=rotateLeft(p); //	RR
+		if (getBalance(p.right)>=0) 
+			return rotateLeft(p); //	RR
 		else 
-			p=rotateRightLeft(p); //	RL
+			return rotateRightLeft(p); //	RL
 	}//else if (p.bal==2)
 	return p;
 	
@@ -112,35 +122,23 @@ private AVLNode<T> balanceAfterInsert(AVLNode<T> p, int k){
 
 private AVLNode<T> rotateLeft(AVLNode<T> p){
 	AVLNode<T> q =p.right;
-	
 	p.right=q.left;
 	q.left=p;
 	
-	if(q.bal==0) {
-		p.bal=1;
-		q.bal=-1;
-		
-	}else {
-		p.bal=0;
-		q.bal=0;
-	}
+	p.bal=getBalance(p);
+	q.bal=getBalance(q);
+	
 	return q;
 }//rotateLeft
 
 private AVLNode<T> rotateRight(AVLNode<T>p){
 AVLNode<T> q =p.left;
-	
 	p.left=q.right;
 	q.right=p;
 	
-	if(q.bal==0) {
-		p.bal=-1;
-		q.bal=1;
-		
-	}else {
-		p.bal=0;
-		q.bal=0;
-	}
+	p.bal=getBalance(p);
+	q.bal=getBalance(q);
+	
 	return q;
 }//rotateRight
  
@@ -168,11 +166,11 @@ private AVLNode<T> deleteAVL(AVLNode<T> p, int k){
 		return null ;
 	if(k<p.key) {
 		p.left=deleteAVL(p.left,k);
-		p.bal++;
+		
 	}//if(k<p.key)
 	else if(k>p.key) {
 		p.right=deleteAVL(p.right,k);
-		p.bal--;
+		
 	}//if(k>p.key)
 	else {// key found 
 		// case 1 and 2
@@ -186,25 +184,24 @@ private AVLNode<T> deleteAVL(AVLNode<T> p, int k){
 		p.key=max.key;
 		p.data=max.data;
 		p.left= deleteAVL(p.left, max.key);
-		p.bal++;
+	}//else
+		p.bal=getBalance(p);
 		
 		// unbalance cases 
 		if (p.bal==-2) {// left 
-			if (p.left.bal<=0) 
-				p=rotateRight(p); //	LL
+			if (getBalance(p.left)<=0) 
+				return rotateRight(p); //	LL
 			else 
-				p=rotateLeftRight(p); //	LR
+				return rotateLeftRight(p); //	LR
 		}//if (p.bal==-2)
 		
 		else if (p.bal==2) {// right 
-			if (p.right.bal>=0) 
-				p=rotateLeft(p); //	RR
+			if (getBalance(p.right)>=0) 
+				return rotateLeft(p); //	RR
 			else 
-				p=rotateRightLeft(p); //	RL
+				return rotateRightLeft(p); //	RL
 		}//else if (p.bal==2)
 		
-	
-	}//else 
 	return p;
 }//deleteAVL
 
@@ -215,6 +212,16 @@ private AVLNode<T> getMax(AVLNode<T> p ){
 	return p;
 		
 }//getMax
+
+
+
+
+
+
+
+
+
+
 
 public void inorder() {
 	inOrder(root);

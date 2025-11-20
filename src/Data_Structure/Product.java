@@ -36,6 +36,45 @@ this.stock=stock;
 	   return reviews;
    }
    
+   public Review[] getReviewsArray() {
+	  int size= getReviewCount();
+	  Review[] rArray=new Review[size];
+	  
+	  if(size==0)return rArray;
+	  
+	  int i =0 ;
+	  reviews.findFirst();
+	  while (!reviews.last()) {
+		  rArray[i++]=reviews.retrieve();
+		  reviews.findNext();
+	  }//while
+	  rArray[i]=reviews.retrieve();// last item
+	  
+	  return rArray;
+   }//getReviewsArray
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    public void setPrice (double newPrice) {
 	   this.price=newPrice;
    } 
@@ -318,40 +357,40 @@ this.stock=stock;
          printProductsInPriceRangeRec(node.right,min,max); 
 
     }//printProductsInPriceRangeRec
-    
-    
-    
-        /*
-    public static void printCommonReviewedAbove(LinkedList<Product> list, int c1, int c2, double minAvg) {
-    	boolean found=false;
-    	if (list.empty()) {
-    		System.out.println("No products available.");
-    	return;
-    	}//end if
+    public static void printCommonReviewedAbove(AVLTree<Product> p, int c1, int c2) {
+    	printCommonReviewedAbove(p.root, c1,  c2);
+    }//printCommonReviewedAbove
+        
+    private static void printCommonReviewedAbove(AVLNode<Product> p, int c1, int c2) {
     	
-    	list.findFirst();
-    	while(!list.last()) {
-    		Product p=list.retrieve();
+    	if (p==null) return;
+    	//left
+    	printCommonReviewedAbove(p.left,c1,c2);
+    	
+    	LinkedList<Review> rList=p.data.getReviews();
+    	
+    	
     		boolean aReviewed=false, bReviewed=false;
-    		LinkedList<Review> rList=p.getReviews();
+    		
     		
     		if (!rList.empty()) {
+    			
     			rList.findFirst();
-    			
     			while (!rList.last()) {
-    			Review r=rList.retrieve();
-    			int cid=r.getCustomerId();
+    				
+    				Review r=rList.retrieve();
+    				int cid=r.getCustomerId();
     			
-    			if (cid==c1)
-    				aReviewed=true;
-    			if (cid==c2)
-    				bReviewed=true;  
-    			if (aReviewed && bReviewed)
-    				break;
+    				if (cid==c1)
+    					aReviewed=true;
+    				if (cid==c2)
+    					bReviewed=true;  
+    				if (aReviewed && bReviewed)
+    					break;
     			
     			rList.findNext();
     			}//end while
-    			
+    			//last review
     			if (!aReviewed || !bReviewed) {
     				Review r=rList.retrieve();
         			int cid=r.getCustomerId();
@@ -363,55 +402,16 @@ this.stock=stock;
     		    
     		}//end if
     		
-    		if (aReviewed && bReviewed && p.getAverageRating() > minAvg) {
-    			System.out.println(p.getName() + " (avg=" + p.getAverageRating() + ")");
-    			found=true;
+    		if (aReviewed && bReviewed && p.data.getAverageRating() > 4) {
+    			System.out.println(p.data.getName() + " (avg=" + p.data.getAverageRating() + ")");
+    			
     		}//end if
-    		list.findNext();
-    	}//end while !list.last()
-    	 //last product
-    	Product p=list.retrieve();
-		boolean aReviewed=false, bReviewed=false;
-		LinkedList<Review> rList=p.getReviews();
-		
-		if (!rList.empty()) {
-			rList.findFirst();
-			
-			while (!rList.last()) {
-			Review r=rList.retrieve();
-			int cid=r.getCustomerId();
-			
-			if (cid==c1)
-				aReviewed=true;
-			if (cid==c2)
-				bReviewed=true;  
-			if (aReviewed && bReviewed)
-				break;
-			
-			rList.findNext();
-			}//end while
-			
-			if (!aReviewed || !bReviewed) {
-				Review r=rList.retrieve();
-    			int cid=r.getCustomerId();
-    			if (cid==c1)
-    				aReviewed=true;
-    			if (cid==c2)
-    				bReviewed=true;  
-			}
-		    
-		}//end if
-
-		if (aReviewed && bReviewed && p.getAverageRating() > minAvg) {
-			System.out.println(p.getName() + " (avg=" + p.getAverageRating() + ")");
-			found=true;
-		}//end if
-		
-    		if (!found)
-    			System.out.println("No common reviewed products above " + minAvg);
+    		//right
+    		printCommonReviewedAbove(p.right,c1,c2);
+    	 
     	}
     
-    */
+    
     
     public static boolean removeById(AVLTree<Product> tree, int pid) {
     	Product target = searchById(tree, pid);
