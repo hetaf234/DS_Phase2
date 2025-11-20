@@ -118,6 +118,67 @@ public void printMyReviews() {
     }//printReviewsByCustomerId
 
 
+   static void fillCustomersInOrder(AVLNode<Customer> c,Customer []cArray ,int[]idx) {
+   	if(c==null) return;
+   	fillCustomersInOrder(c.left,cArray,idx);
+   	cArray[idx[0]++]=c.data;
+   	fillCustomersInOrder(c.right,cArray,idx);
+
+   }//fillProductsInOrder
+   
+   static void listCustomerAlphabetically(AVLTree<Customer> tree) {
+	   int size=Main.countAVL(tree);
+	   if(size==0) {
+		   System.out.println("No customers found.");
+		   return;
+	   }//if
+	  Customer [] cArray= new Customer [size];
+	  int [] idx = {0};
+	  fillCustomersInOrder(tree.root,cArray,idx);
+	  
+	  //bubble sort 
+	  for (int i = 0 ; i < size-1;i++) {
+		  for (int j = 0 ; j < size-i-1;j++) {
+			  if(cArray[j].getName().compareToIgnoreCase(cArray[j+1].getName())>0) {
+				Customer temp =cArray[j];
+				cArray[j]=cArray[j+1];
+				cArray[j+1]=temp;
+			  }// if 
+		  }// inner loop j 
+	  }// outer loop i 
+	   System.out.println("Customers Sorted Alphabetically:");
+	   for(int i =0 ; i <cArray.length;i++) {
+		   System.out.println(cArray[i].getName());
+	   }// for 
+	   
+	   
+	   
+   }//listCustomerAlphabetically
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
 	@Override
 	public String toString() {

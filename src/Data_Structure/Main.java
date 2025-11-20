@@ -23,7 +23,9 @@ static int nextReviewId=1;
         loadOrders("src/Data_Structure/orders.csv");
         loadReviews("src/Data_Structure/reviews.csv");
 
-        System.out.println( "Loaded Products =" + countAVL( products) + ", Customers =" + countAVL(customers) +", Orders =" +countAVL(orders) );
+        System.out.println( "Loaded Products =" + countAVL( products) + 
+        		", Customers =" + countAVL(customers) +
+        		", Orders =" +countAVL(orders) );
 
         //Menu loop
 
@@ -54,6 +56,7 @@ static int nextReviewId=1;
                 System.out.println("15- Remove Product by ID");
                 System.out.println("16- Update Order Status");
                 System.out.println("17- Search Product by Name");
+                System.out.println("18- Products in a price range");
                 System.out.println("0- Exit");
                 System.out.print(" Enter your choice: ");
 
@@ -100,6 +103,8 @@ static int nextReviewId=1;
                         updateOrderStatus(sc); break;
                     case 17:
                         searchProductByName(sc); break;
+                    case 18:
+                       printProductsInPriceRange(sc); break;  
                     case 0: 
                         System.out.println("Program ended ");
                         break;
@@ -464,6 +469,46 @@ static int nextReviewId=1;
         o.updateStatus(st);
     } // end updateOrderStatus
 
+    static void printProductsInPriceRange(Scanner sc) {
+    	System.out.println("What is the min price?");
+    	double min =sc.nextDouble();
+    	
+    	System.out.println("What is the max price?");
+    	double max =sc.nextDouble();
+    	
+    	sc.nextLine();//cleaning
+    	Product.printProductsInPriceRange(products, min, max);
+    }//printProductsInPriceRange
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // CSV Loaders
 
     // load products.csv : productId,name,price,stock
@@ -651,6 +696,13 @@ static int nextReviewId=1;
         return 1+countNodes(p.left)+countNodes(p.right);
      } // end countAvl
 
+    
+    
+    
+    
+    
+    
+    
     static void searchProductByName(Scanner sc) {
         System.out.print("Enter The product Name : ");
         String name=sc.nextLine();

@@ -81,7 +81,21 @@ this.stock=stock;
 			return true; }
     	return false;
     }
-   
+   public int getReviewCount() {
+	   if(reviews.empty()) return 0;
+	   
+	   int count=0;
+	   reviews.findFirst();
+	   while(!reviews.last()) {
+		   count++;
+		   reviews.findNext();
+	   }//while
+	   //last item 
+	   count++;
+	   return count;
+		   
+   }//getReviewCount
+    
     
     public double getAverageRating() {
     	if (reviews.empty()) 
@@ -154,6 +168,7 @@ this.stock=stock;
     public static Product searchByName(AVLTree<Product> tree, String name) {
     	return searchByNameRec(tree.root, name);
     }//end searchByName
+    
     private static Product searchByNameRec(AVLNode<Product> p,String name) {
     	if(p==null) return null; 
     	
@@ -167,20 +182,85 @@ this.stock=stock;
     }//searchByNameRec
     
     
+    static void fillProductsInOrder(AVLNode<Product>p,Product []pArray,int[]idx) {
+    	if(p==null) return;
+    	fillProductsInOrder(p.left,pArray,idx);
+    	pArray[idx[0]++]=p.data;
+    	fillProductsInOrder(p.right,pArray,idx);
+
+    }//fillProductsInOrder
+    
+    public static void printTop3MostReviewed(AVLTree<Product> tree) {
+        int size=Main.countAVL(tree);
+        if(size==0) {System.out.println("no product found" ); return;}
+        Product[] pArray= new Product[size];
+        int [] idx= {0};
+        fillProductsInOrder(tree.root, pArray,idx);
+        
+        
+        
+            Product a = null, b = null, c = null;
+            double ra = -1, rb = -1, rc = -1;
+
+           for(int i=0;i<size;i++) {
+        	   Product p=pArray[i];
+            	int r=p.getReviewCount();
+            	
+            	if (r>ra) {
+            		c=b; rc=rb;
+            		b=a; rb=ra;
+            		a=p; ra=r;
+            	}//end if
+            	
+            	else if (r>rb) {
+            		c=b; rc=rb;
+            		b=p; rb=r;
+            	}// end else if
+            	
+            	else if (r>rc) {
+            		c=p; rc=r;
+            	}// end else if
+            	
+            	
+            }//for
+            
+        	System.out.println("Top 3 Most Reviewed Products:");
+        	
+        	if (a!=null )
+        		System.out.println("1) " + a.getName() + " (" + ra + ")");
+        		
+        	
+        	
+            if (b!=null)
+            		System.out.println("2) " + b.getName() + " (" + rb + ")");
+            		
+            
+            if (c!=null) 
+                	System.out.println("3) " + c.getName() + " (" + rc + ")");
+                	
+                	
+            
+        }//end printTopNByAverageRating()
+    	
+        
     
     
     
     
+    public static void printTopNByAverageRating(AVLTree<Product> tree) {
+    int size=Main.countAVL(tree);
+    if(size==0) {System.out.println("no product found" ); return;}
+    Product[] pArray= new Product[size];
+    int [] idx= {0};
+    fillProductsInOrder(tree.root, pArray,idx);
     
     
-    /*
-    public static void printTopNByAverageRating(AVLTree<Product> tree, int n) {
+    
         Product a = null, b = null, c = null;
         double ra = -1, rb = -1, rc = -1;
 
-        list.findFirst();
-        while (!list.last()) {
-        	Product p=list.retrieve();
+       for(int i=0;i<size;i++) {
+    	   Product p=pArray[i];
         	double r=p.getAverageRating();
         	
         	if (r>ra) {
@@ -198,47 +278,28 @@ this.stock=stock;
         		c=p; rc=r;
         	}// end else if
         	
-        	list.findNext();
-        }
+        	
+        }//for
         
-    	Product p=list.retrieve();
-    	double r=p.getAverageRating();
+    	System.out.println("Top 3 Avg Products:");
     	
-    	if (r>ra) {
-    		c=b; rc=rb;
-    		b=a; rb=ra;
-    		a=p; ra=r;
-    	}//end if
-    	
-    	else if (r>rb) {
-    		c=b; rc=rb;
-    		b=p; rb=r;
-    	}// end else if
-    	
-    	else if (r>rc) {
-    		c=p; rc=r;
-    	}// end else if
-    	
-    	System.out.println("Top " + n + " Products:");
-    	int count=0;
-    	if (a!=null && count<n ) {
+    	if (a!=null )
     		System.out.println("1) " + a.getName() + " (" + ra + ")");
-    		count++;
-    	}
+    		
     	
-        if (b!=null && count<n ) {
+    	
+        if (b!=null)
         		System.out.println("2) " + b.getName() + " (" + rb + ")");
-        		count++;
-        }
+        		
         
-        if (c!=null && count<n ) {
+        if (c!=null) 
             	System.out.println("3) " + c.getName() + " (" + rc + ")");
-            	count++; 
-            	}
+            	
+            	
         
     }//end printTopNByAverageRating()
 	
-    */
+    
     
     
     
@@ -363,11 +424,14 @@ this.stock=stock;
     	}//end while
     	return tree.removeKey(pid);
     }//removeById
+
+	@Override
+	public String toString() {
+		return "productId=" + productId + ", name=" + name + ", price=" + price + ", stock=" + stock
+				+ ", reviews=" + reviews ;
+	}
    
     
-    @Override
-	public String toString() {
-		return "Product " + productId + ", name=" + name + ", price=" + price + ", stock=" + stock;
-	}
+   
     
 } // end Product class
