@@ -65,7 +65,20 @@ package Data_Structure;
     	}//else
     		
     }//end of remove 
+
+	@Override
+	public String toString() {
+		if(empty()) return "no reviews";
+		String s="";
+		current=head;
+		while(current!=null) {
+			String t=current.data.toString();
+			s+=t+"\n";
+			current=current.next;
+		}
+		return s;
+	}
    
-   
+  
     
     }//end of LinkedList class 

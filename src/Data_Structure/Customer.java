@@ -103,11 +103,6 @@ public void printMyReviews() {
 			    }//end searchById()
 		
 		
-		
-		
-	
-    
-    
    public static void printReviewsByCustomerId(AVLTree<Customer>tree, int cid) {
     	Customer c= searchById(tree,cid);
     	if (c==null) {
@@ -154,31 +149,6 @@ public void printMyReviews() {
 	   
 	   
    }//listCustomerAlphabetically
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
 
 	@Override
 	public String toString() {

@@ -1,19 +1,15 @@
 
 package Data_Structure;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 
 public class Order{
     
- 
-   
-
     private int orderId;
     private Customer customer;
     private AVLTree<Product>products=new AVLTree<>();
-  
     private Date orderDate;
     private double totalPrice;
     private String status;
@@ -120,9 +116,11 @@ public class Order{
 	  o.addProduct(p);
 	  return true;
   }//addProductToOrderById
+  
   public static void printBetweenDates(AVLTree<Order> o, Date start , Date end) {
 	  printBetweenDatesRec(o.root,start, end);
   }//printBetweenDates
+  
     
    private static void printBetweenDatesRec(AVLNode<Order>p, Date start , Date end) { 
 	   if (p==null) return ;
@@ -135,12 +133,33 @@ public class Order{
 	   
 	   printBetweenDatesRec(p.right,start,end);
    }//printBetweenDatesRec
+   public String DisplayProduct(AVLTree<Product>p) {
+      	if(p.empty()) 
+      		return "no products";
+      	String s="" ;
+      	return StringBuilder(p.root,s);
+      }
     
+      
+      
+      private String StringBuilder(AVLNode<Product> p,String s) {
+   	   if(p==null)return s;
+   	   s=StringBuilder(p.left,s);
+   	   s+=p.data.toString()+"\n";
+   	   s=StringBuilder(p.right,s);
+   	  return s; 
+      }//StringBuilder   
+   
+   
+   
+   
+   
+   
   @Override
   public String toString() {
 	  SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	  
-	return "orderId=" + orderId + "\n customer=" + customer + "\n products=" + products + "\n orderDate="
+	return "orderId=" + orderId + "\n customer=" + customer + "\n products=" + DisplayProduct(products) + "\n orderDate="
 			+ df.format(orderDate) + "\n totalPrice=" + totalPrice + "\n status=" + status ;
   }//tostring
 
@@ -148,7 +167,7 @@ public class Order{
 
   
     
-    
+   
 
     
 } // end Order class

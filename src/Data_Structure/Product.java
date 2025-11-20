@@ -425,10 +425,14 @@ this.stock=stock;
     	return tree.removeKey(pid);
     }//removeById
 
+    
+    
+    
+    
 	@Override
 	public String toString() {
 		return "productId=" + productId + ", name=" + name + ", price=" + price + ", stock=" + stock
-				+ ", reviews=" + reviews ;
+				+ ", reviews="+ reviews.toString() ;
 	}
    
     

@@ -215,14 +215,6 @@ private AVLNode<T> getMax(AVLNode<T> p ){
 
 
 
-
-
-
-
-
-
-
-
 public void inorder() {
 	inOrder(root);
 }// inorder
