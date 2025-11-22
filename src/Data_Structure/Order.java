@@ -128,10 +128,15 @@ public class Order{
 	   Order o = p.data ;
 	   Date d= o.getOrderDate();
 	   
-	   if(!d.before(start)&& !d.after(end))
+	   if(!d.before(start)&& !d.after(end)) 
 		   System.out.println(o);
-	   
+		   
 	   printBetweenDatesRec(p.right,start,end);
+	   
+	  
+	   
+	   
+	   
    }//printBetweenDatesRec
    public String DisplayProduct(AVLTree<Product>p) {
       	if(p.empty()) 

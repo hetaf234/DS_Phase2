@@ -55,26 +55,6 @@ this.stock=stock;
    
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    public void setPrice (double newPrice) {
 	   this.price=newPrice;
    } 
@@ -83,10 +63,7 @@ this.stock=stock;
     	this.stock=newStock;
    }
     
-    
-    
-    
-    
+   
     public void addReview (Review r) {
  	   if (r!=null && r.getProductId()==this.productId)
  		   reviews.insert(r);
@@ -158,8 +135,6 @@ this.stock=stock;
 		
 		return count == 0 ? 0 : sum/count;
     } //end getAverageRating()
-    
-
     
     public boolean isOutOfStock() {
     	return stock <=0;
@@ -279,11 +254,11 @@ this.stock=stock;
                 	
                 	
             
-        }//end printTopNByAverageRating()
+        }//end printTop3MostReviewed()
     	
-        
+   
     
-    
+ 
     
     
     public static void printTopNByAverageRating(AVLTree<Product> tree) {
@@ -345,6 +320,7 @@ this.stock=stock;
     public static void printProductsInPriceRange(AVLTree <Product> tree, double min , double max) {
     	printProductsInPriceRangeRec(tree.root,  min ,  max);
     }//printProductsInPriceRange
+    
     private static void printProductsInPriceRangeRec(AVLNode<Product> node, double min , double max) {
     	if(node==null)return;
          printProductsInPriceRangeRec(node.left,min,max); 
@@ -357,6 +333,8 @@ this.stock=stock;
          printProductsInPriceRangeRec(node.right,min,max); 
 
     }//printProductsInPriceRangeRec
+    
+    
     public static void printCommonReviewedAbove(AVLTree<Product> p, int c1, int c2) {
     	printCommonReviewedAbove(p.root, c1,  c2);
     }//printCommonReviewedAbove
