@@ -336,14 +336,14 @@ this.stock=stock;
     
     
     public static void printCommonReviewedAbove(AVLTree<Product> p, int c1, int c2) {
-    	printCommonReviewedAbove(p.root, c1,  c2);
+    	printCommonReviewedAboveRec(p.root, c1,  c2);
     }//printCommonReviewedAbove
         
-    private static void printCommonReviewedAbove(AVLNode<Product> p, int c1, int c2) {
+    private static void printCommonReviewedAboveRec(AVLNode<Product> p, int c1, int c2) {
     	
     	if (p==null) return;
     	//left
-    	printCommonReviewedAbove(p.left,c1,c2);
+    	printCommonReviewedAboveRec(p.left,c1,c2);
     	
     	LinkedList<Review> rList=p.data.getReviews();
     	
@@ -367,9 +367,10 @@ this.stock=stock;
     					break;
     			
     			rList.findNext();
+    			
     			}//end while
     			//last review
-    			if (!aReviewed || !bReviewed) {
+    			if (!(aReviewed && bReviewed)) {
     				Review r=rList.retrieve();
         			int cid=r.getCustomerId();
         			if (cid==c1)
@@ -385,7 +386,7 @@ this.stock=stock;
     			
     		}//end if
     		//right
-    		printCommonReviewedAbove(p.right,c1,c2);
+    		printCommonReviewedAboveRec(p.right,c1,c2);
     	 
     	}
     
