@@ -747,56 +747,46 @@ static int nextReviewId=1;
     		System.out.println("product not found");
     		return;
     	}//if
-    	int size =p.getReviewCount();
-    	if(size==0) {
-    		System.out.println("no reviews found ");
-    		return;
-    	}//if 
+    
     	
-    	Review rArray[]=p.getReviewsArray();
-    	 for (int i = 0 ; i < size-1;i++) {
-   		  for (int j = 0 ; j < size-i-1;j++) {
-   			  if(rArray[j].getCustomerId()>rArray[j+1].getCustomerId()) {
-   				Review temp =rArray[j];
-   				rArray[j]=rArray[j+1];
-   				rArray[j+1]=temp;
-   			  }// if 
-   		  }// inner loop j 
-   	  }// outer loop i 
-    	 
-    	 System.out.println("Customers who reviewd  " +p.getName());
-  	   for(int i =0 ; i <size;i++) {
-  		   int cid=rArray[i].getCustomerId();
-  		   Customer c= Customer.searchById(cTree, cid);
-  		   if(c!=null) {
-
-  		
-  			 System.out.println(c.getName()+" - ID "+ cid);
-  	   }//if
-    	 
-  	   } //for
+    	if(p.getReviewCount()==0) {
+    		System.out.println("no reviews found");
+    		return;
+    	}//if
+    	AVLMap<Integer, Review>map=new AVLMap<>();
+    	fillReviewsByCID(p.getReviews(),map);
+    	System.out.println("Customer who reviewd the product:");
+    	printReviewsByCID(map.getRoot(),cTree);
     	 
     	 
-    	 
-    	 
-    	 
-    }//listCustomerWhoReviewedProductByRating
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }//listCustomerWhoReviewedProductByCID
+    static void fillReviewsByCID(LinkedList<Review> list,AVLMap<Integer,Review>map) {
+    	if(list.empty())return;
+    	list.findFirst();
+    	while(!list.last()){
+    		Review r=list.retrieve();
+    		int k=r.getCustomerId();
+    		map.insert(k, r);
+    		list.findNext();
+    	}//while
+    	Review r=list.retrieve();
+    	int k=r.getCustomerId();
+		map.insert(k, r);
+    	
+    }//fillReviewsByCID
+    static void printReviewsByCID(AVLM_Node<Integer,Review>n,AVLTree<Customer> cTree) {
+   	 if(n==null)return;
+   	printReviewsByCID(n.left,cTree);
+   	 
+   	 Review r=n.data;
+   	 Customer c =Customer.searchById(cTree, r.getCustomerId());
+   	 if(c!=null) 
+   		 System.out.println(c.getName()+"- rating"+r.getRating());
+   	
+   	printReviewsByCID(n.right,cTree);
+   	 
+   	 
+    }//printReviewsDec
     
     
     
@@ -811,42 +801,47 @@ static int nextReviewId=1;
     		System.out.println("product not found");
     		return;
     	}//if
-    	int size =p.getReviewCount();
-    	if(size==0) {
-    		System.out.println("no reviews found ");
+    	if(p.getReviewCount()==0) {
+    		System.out.println("no reviews found");
     		return;
-    	}//if 
-    	Review rArray[]=p.getReviewsArray();
-    	 for (int i = 0 ; i < size-1;i++) {
-   		  for (int j = 0 ; j < size-i-1;j++) {
-   			  if(rArray[j].getRating()<rArray[j+1].getRating()) {
-   				Review temp =rArray[j];
-   				rArray[j]=rArray[j+1];
-   				rArray[j+1]=temp;
-   			  }// if 
-   		  }// inner loop j 
-   	  }// outer loop i 
-    	 
-    	 System.out.println("Customers who reviewd  " +p.getName());
-  	   for(int i =0 ; i <size;i++) {
-  		   int cid=rArray[i].getCustomerId();
-  		   Customer c= Customer.searchById(cTree, cid);
-  		   if(c!=null) {
-
-  		
-  			 System.out.println(c.getName()+" - rating "+ rArray[i].getRating());
-  	   }//if
-    	 
-  	   } //for
-    	 
-    	 
-    	 
+    	}//if
+    	AVLMap<Integer, Review>map=new AVLMap<>();
+    	fillReviewsByRating(p.getReviews(),map);
+    	System.out.println("Customer who reviewd the product:");
+    	printReviewsDec(map.getRoot(),cTree);
     	 
     	 
     }//listCustomerWhoReviewedProductByRating
     
-    
-    
+    static void fillReviewsByRating(LinkedList<Review> list,AVLMap<Integer,Review>map) {
+    	if(list.empty())return;
+    	list.findFirst();
+    	while(!list.last()){
+    		Review r=list.retrieve();
+    		int k=(r.getRating()*1000)+r.getReviewId();
+    		map.insert(k, r);
+    		list.findNext();
+    	}//while
+    	Review r=list.retrieve();
+		int k=(r.getRating()*1000)+r.getReviewId();
+		map.insert(k, r);
+    	
+    	
+    	
+    }//fillReviewsByRating
+     static void printReviewsDec(AVLM_Node<Integer,Review>n,AVLTree<Customer> cTree) {
+    	 if(n==null)return;
+    	 printReviewsDec(n.right,cTree);
+    	 
+    	 Review r=n.data;
+    	 Customer c =Customer.searchById(cTree, r.getCustomerId());
+    	 if(c!=null) 
+    		 System.out.println(c.getName()+"- rating"+r.getRating());
+    	
+    	 printReviewsDec(n.left,cTree);
+    	 
+    	 
+     }//printReviewsDec
     
     
     

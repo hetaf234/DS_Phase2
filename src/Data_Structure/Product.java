@@ -196,121 +196,66 @@ this.stock=stock;
     }//searchByNameRec
     
     
-    static void fillProductsInOrder(AVLNode<Product>p,Product []pArray,int[]idx) {
+    static void fillProductsByReviewCount(AVLNode<Product>p,AVLMap<Integer,Product>map) {
     	if(p==null) return;
-    	fillProductsInOrder(p.left,pArray,idx);
-    	pArray[idx[0]++]=p.data;
-    	fillProductsInOrder(p.right,pArray,idx);
+    	fillProductsByReviewCount(p.left,map);
+    	int k= p.data.getReviewCount()*1000+p.data.getProductId();
+    	map.insert(k, p.data);
+    	fillProductsByReviewCount(p.right,map);
 
-    }//fillProductsInOrder
+    }//fillProductsByReviewCount
     
     public static void printTop3MostReviewed(AVLTree<Product> tree) {
-        int size=Main.countAVL(tree);
-        if(size==0) {System.out.println("no product found" ); return;}
-        Product[] pArray= new Product[size];
-        int [] idx= {0};
-        fillProductsInOrder(tree.root, pArray,idx);
-        
-        
-        
-            Product a = null, b = null, c = null;
-            double ra = -1, rb = -1, rc = -1;
-
-           for(int i=0;i<size;i++) {
-        	   Product p=pArray[i];
-            	int r=p.getReviewCount();
-            	
-            	if (r>ra) {
-            		c=b; rc=rb;
-            		b=a; rb=ra;
-            		a=p; ra=r;
-            	}//end if
-            	
-            	else if (r>rb) {
-            		c=b; rc=rb;
-            		b=p; rb=r;
-            	}// end else if
-            	
-            	else if (r>rc) {
-            		c=p; rc=r;
-            	}// end else if
-            	
-            	
-            }//for
-            
-        	System.out.println("Top 3 Most Reviewed Products:");
-        	
-        	if (a!=null )
-        		System.out.println("1) " + a.getName() + " (" + ra + ")");
-        		
-        	
-        	
-            if (b!=null)
-            		System.out.println("2) " + b.getName() + " (" + rb + ")");
-            		
-            
-            if (c!=null) 
-                	System.out.println("3) " + c.getName() + " (" + rc + ")");
-                	
-                	
-            
+      if(tree.empty()) {
+    	  System.out.println("No products found");
+    	  return;
+      }//if
+      AVLMap<Integer,Product> map=new AVLMap<>();
+      fillProductsByReviewCount(tree.root,map);
+      
+      System.out.println("Top 3 Most Reviewed Products");
+      int [] c= {0};
+      printTop3FromRight(map.getRoot(),c);
+      
+      
         }//end printTop3MostReviewed()
+   static void printTop3FromRight(AVLM_Node<Integer,Product> n,int []c){
+    	if(n==null || c[0]>=3)return;
+    	printTop3FromRight(n.right,c);
     	
+    	if(c[0]<3) {
+    		Product p=n.data;
+    		System.out.println((c[0]+1)+")"+p);
+    		c[0]++;
+    				
+    	}//if
+    	printTop3FromRight(n.left,c);
+    }//printTop3FromRight
    
     
- 
+   
+   static void fillProductsByRating(AVLNode<Product>p,AVLMap<Integer,Product>map) {
+   	if(p==null) return;
+   	fillProductsByRating(p.left,map);
+   	int r=(int)(p.data.getAverageRating()*1000)+p.data.getProductId();
+   	map.insert(r, p.data);
+   	fillProductsByRating(p.right,map);
+
+   }//fillProductsByRating
     
     
     public static void printTopNByAverageRating(AVLTree<Product> tree) {
-    int size=Main.countAVL(tree);
-    if(size==0) {System.out.println("no product found" ); return;}
-    Product[] pArray= new Product[size];
-    int [] idx= {0};
-    fillProductsInOrder(tree.root, pArray,idx);
-    
-    
-    
-        Product a = null, b = null, c = null;
-        double ra = -1, rb = -1, rc = -1;
-
-       for(int i=0;i<size;i++) {
-    	   Product p=pArray[i];
-        	double r=p.getAverageRating();
-        	
-        	if (r>ra) {
-        		c=b; rc=rb;
-        		b=a; rb=ra;
-        		a=p; ra=r;
-        	}//end if
-        	
-        	else if (r>rb) {
-        		c=b; rc=rb;
-        		b=p; rb=r;
-        	}// end else if
-        	
-        	else if (r>rc) {
-        		c=p; rc=r;
-        	}// end else if
-        	
-        	
-        }//for
+   
+    	if(tree.empty()) {
+      	  System.out.println("No products found");
+      	  return;
+        }//if
+        AVLMap<Integer,Product> map=new AVLMap<>();
+        fillProductsByRating(tree.root,map);
         
-    	System.out.println("Top 3 Avg Products:");
-    	
-    	if (a!=null )
-    		System.out.println("1) " + a.getName() + " (" + ra + ")");
-    		
-    	
-    	
-        if (b!=null)
-        		System.out.println("2) " + b.getName() + " (" + rb + ")");
-        		
-        
-        if (c!=null) 
-            	System.out.println("3) " + c.getName() + " (" + rc + ")");
-            	
-            	
-        
+        System.out.println("Top 3 Average Rated  Products");
+        int [] c= {0};
+        printTop3FromRight(map.getRoot(),c);
     }//end printTopNByAverageRating()
 	
     
@@ -410,7 +355,7 @@ this.stock=stock;
     
 	@Override
 	public String toString() {
-		return "productId=" + productId + ", name=" + name + ", price=" + price + ", stock=" + stock
+		return "productId=" + productId + ", name=" + name + ", price=" + price + ", stock=" + stock+"Average rating"+ getAverageRating()
 				+ ", reviews="+ reviews.toString() ;
 	}
    
