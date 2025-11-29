@@ -36,22 +36,7 @@ this.stock=stock;
 	   return reviews;
    }
    
-   public Review[] getReviewsArray() {
-	  int size= getReviewCount();
-	  Review[] rArray=new Review[size];
-	  
-	  if(size==0)return rArray;
-	  
-	  int i =0 ;
-	  reviews.findFirst();
-	  while (!reviews.last()) {
-		  rArray[i++]=reviews.retrieve();
-		  reviews.findNext();
-	  }//while
-	  rArray[i]=reviews.retrieve();// last item
-	  
-	  return rArray;
-   }//getReviewsArray
+   
    
    
    
